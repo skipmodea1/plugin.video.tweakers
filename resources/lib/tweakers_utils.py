@@ -10,7 +10,7 @@ import urlparse
 #
 #
 class HTTPCommunicator :
-    #
+    # 
     # POST
     #
     def post( self, host, url, params ):

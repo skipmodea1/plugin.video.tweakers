@@ -29,7 +29,7 @@
 	<string id="30501">%s to %s</string>
 	<string id="30502">Page %u</string>
 	<string id="30503">Next page</string>
-	<string id="30504">Getting video location...</string>
+	<string id="30504">Getting video location....</string>
 	<string id="30505">No video found.</string>
 	<string id="30506">No media found for:</string>
 	<string id="30507">Error getting page: %s</string>
