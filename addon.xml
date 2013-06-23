@@ -13,15 +13,15 @@
   </extension>
   <extension point="xbmc.addon.metadata">
 	<platform>all</platform>
-	<summary lang="en">Watch videos from Tweakers.net</summary>
-	<description lang="en">Watch videos from Tweakers.net</description>
+	<summary lang="en">Watch tech videos from Tweakers.net (dutch)</summary>
+	<description lang="en">Watch tech videos from Tweakers.net (dutch)</description>
 	<disclaimer lang="en">For bugs, requests or general questions visit the tweakers thread on the XBMC forum.</disclaimer>
     <language>nl</language>
     <platform>all</platform>
     <license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
     <forum></forum>
-    <website></website>
+    <website>http://www.tweakers.net</website>
     <email></email>
-    <source></source>
+    <source>git://github.com/skipmodea1/plugin.video.tweakers.git</source>
   </extension>
 </addon>
