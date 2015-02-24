@@ -64,10 +64,9 @@ class Main:
 		#the real mp4 link can be found a this page: http://tweakers.net/video/player/7893/world-of-tanks-86-aankondiging.html
 		#therefore adding '/player'
 		self.video_page_url = str(self.video_page_url)
-		self.video_page_url = self.video_page_url.replace('video/', 'video/player/')
 		
 		if (self.DEBUG) == 'true':
-			xbmc.log( "[ADDON] %s v%s (%s) debug mode, %s = %s" % ( __addon__, __version__, __date__, "altered self.video_page_url", str(self.video_page_url) ), xbmc.LOGNOTICE )
+			xbmc.log( "[ADDON] %s v%s (%s) debug mode, %s = %s" % ( __addon__, __version__, __date__, "self.video_page_url", str(self.video_page_url) ), xbmc.LOGNOTICE )
 		
 		try:
 			html_data = httpCommunicator.get ( self.video_page_url )
@@ -85,15 +84,15 @@ class Main:
 		#<a href="http://content.tweakers.tv/stream/item=piDTr63m3i/file=N8vjyj2e75/cid=Kn1cb9g4kfgdcZaRE57j/piDTr63m3i.mp4">Download de video:Samsung's Galaxy S4's: de Active en de Mini</a>
 		#</video>
 
-		video_urls = soup.findAll('a', attrs={'href': re.compile("http://content.tweakers.tv/stream/")})
-		for video_url in video_urls :
-			video_url = str(video_url)
-			pos_of_href = video_url.find("href=")
-			video_url = video_url[pos_of_href + len("href="):]
-			#remove leading quote
-			video_url = video_url[1:]
-			pos_of_quote = video_url.find('"')
-			video_url = video_url[0:pos_of_quote]
+		video_div = soup.find("div", { "class" : "videoQuality" })
+
+		video_url = video_div.findAll('a', href=True)[-1]
+
+		if (self.DEBUG) == 'true':
+			xbmc.log( "[ADDON] %s v%s (%s) debug mode, %s = %s" % ( __addon__, __version__, __date__, "video_url1", str(video_url) ), xbmc.LOGNOTICE )
+
+		video_url = str(video_url['href'])
+		video_url = video_url.replace(" ", "")
 		
 		if (self.DEBUG) == 'true':
 			xbmc.log( "[ADDON] %s v%s (%s) debug mode, %s = %s" % ( __addon__, __version__, __date__, "video_url", str(video_url) ), xbmc.LOGNOTICE )
