@@ -1,5 +1,5 @@
 v1.0.3 (Wednesday, 25 February 2015) :
-- play highest video quality available (kudos to Amelandbor!)
+- play the highest video quality that's available (kudos to Amelandbor!)
 
 v1.0.2 (Saturday, 3 August 2013) :
 - fixed title bug
