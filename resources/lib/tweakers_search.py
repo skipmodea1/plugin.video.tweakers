@@ -121,8 +121,9 @@ class Main:
             xbmc.log("[ADDON] %s v%s (%s) debug mode, %s = %s" % (
                 ADDON, VERSION, DATE, "len(video_page_url_in_tds)", str(len(video_page_url_in_tds))), xbmc.LOGNOTICE)
 
-        #skip the first 3 thumbnails
-        thumbnail_urls_index = thumbnail_urls_index + 3
+        #skip the first thumbnails
+        if len(thumbnail_urls) - len(video_page_url_in_tds) > 0:
+            thumbnail_urls_index = thumbnail_urls_index + (len(thumbnail_urls) - len(video_page_url_in_tds))
 
         for video_page_url_in_td in video_page_url_in_tds:
             video_page_url = video_page_url_in_td.a['href']
