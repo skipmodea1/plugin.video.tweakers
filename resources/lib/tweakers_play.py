@@ -26,7 +26,6 @@ class Main:
     # Init
     #
     def __init__(self):
-
         # Get the command line arguments
         # Get the plugin url in plugin:// notation
         self.plugin_url = sys.argv[0]
@@ -41,6 +40,7 @@ class Main:
 
         # Get plugin settings
         self.DEBUG = SETTINGS.getSetting('debug')
+        self.PREFERRED_VIDEO_QUALITY = SETTINGS.getSetting('preferred-video-quality')
 
         if self.DEBUG == 'true':
             xbmc.log("[ADDON] %s v%s (%s) debug mode, %s = %s, %s = %s" % (
@@ -60,10 +60,10 @@ class Main:
         #
         dialog_wait = xbmcgui.DialogProgress()
         dialog_wait.create(LANGUAGE(30504), self.title)
-        # wait 1 second
+        # Wait 1 second
         xbmc.sleep(1000)
 
-        # video_page_url will be something like this: http://tweakers.net/video/7893/world-of-tanks-86-aankondiging.html
+        # Video_page_url will be something like this: http://tweakers.net/video/7893/world-of-tanks-86-aankondiging.html
         if self.DEBUG == 'true':
             xbmc.log("[ADDON] %s v%s (%s) debug mode, %s = %s" % (
                 ADDON, VERSION, DATE, "self.video_page_url", str(self.video_page_url)), xbmc.LOGNOTICE)
@@ -82,7 +82,7 @@ class Main:
 
         soup = BeautifulSoup(html_source)
 
-        # find the real video page url
+        # Find the real video page url
         # < iframe name = "s1_soc_1" id = "s1_soc_1" style = "border:0" frameborder = 0 width = 620 height = 349
         # src = "//tweakers.net/video/player/12193/pitch-2e-inspiratiesessie-carefree.html?expandByResize=1&amp;width=620&amp;height=349&amp;zone=30"
         # allowfullscreen mozallowfullscreen webkitallowfullscreen > < / iframe >
@@ -109,7 +109,7 @@ class Main:
 
         soup = BeautifulSoup(html_source)
 
-        # find the video url in the json block
+        # Find the video url in the json block
         # .....})('video', {"skin": "https:\/\/tweakimg.net\/x\/video\/skin\/default\/streamone.css?1459246513", "playlist": {
         #        "items": [{"id": "gY8Cje0JOwmQ", "title": "Hyperloop One voert eerste test succesvol uit",
         #        "description": "Hyperloop One heeft in de woestijn in Nevada de eerste succesvolle test van het aandrijfsysteem uitgevoerd. De Hyperloop-slede kwam tijdens de test op de rails binnen 1,1 seconde tot een snelheid van 187km\/u.",
@@ -128,7 +128,7 @@ class Main:
         #                                                                    "src": "http:\/\/media.tweakers.tv\/progressive\/account=s7JeEm\/item=gY8Cje0JOwmQ\/file=BT1DiI2bOFuU\/account=s7JeEm\/gY8Cje0JOwmQ.mp4"}]}],
         #                                      "adaptive": []}, "audioonly": false, "live": false, ...
 
-        # find the json block containing all the video-urls
+        # Find the json block containing all the video-urls
         soup_str = str(soup)
         start_pos_json_block = soup_str.find('[{"label"')
         end_pos_json_block = soup_str.find("}]}]")
@@ -136,15 +136,54 @@ class Main:
         json_string = soup_str[start_pos_json_block:end_pos_json_block]
         parsed_json = json.loads(json_string)
 
-        # find the json block containing the first video-url (this is usually the 1080p one)
-        json_string = str(parsed_json[0]["sources"])
+        if self.DEBUG == 'true':
+            xbmc.log("[ADDON] %s v%s (%s) debug mode, %s = %s" % (ADDON, VERSION, DATE, "json_string", json_string),
+                 xbmc.LOGNOTICE)
+            xbmc.log("[ADDON] %s v%s (%s) debug mode, %s = %s" % (ADDON, VERSION, DATE, "json_string", json_string),
+                 xbmc.LOGNOTICE)
+
+        # Determine what quality the video should be
+        if self.PREFERRED_VIDEO_QUALITY == "0":
+            preferred_video_label = "270p"
+        elif self.PREFERRED_VIDEO_QUALITY == "1":
+            preferred_video_label = "360p"
+        elif self.PREFERRED_VIDEO_QUALITY == "2":
+            preferred_video_label = "720p"
+        elif self.PREFERRED_VIDEO_QUALITY == "3":
+            preferred_video_label = "1080p"
+        else:
+            preferred_video_label = "1080p"
+
+        # Find the source with the preferred video quality
+        sources_index = 0
+        label_found = False
+        while label_found == False:
+            try:
+                if parsed_json[sources_index]["label"] == preferred_video_label:
+                    label_found = True
+                else:
+                    sources_index += 1
+            except:
+                sources_index = 0
+                break
+
+        # Find the json block containing the video-url with the preferred video quality
+        try:
+            json_string = str(parsed_json[sources_index]["sources"])
+        except:
+            # If the preferred quality is not available, use the best available quality
+            json_string = str(parsed_json[0]["sources"])
         json_string = json_string.strip("[")
         json_string = json_string.strip("]")
         json_string = json_string.replace("u'", "'")
         json_string = json_string.replace("'", '"')
         parsed_json = json.loads(json_string)
-
         video_url = str(parsed_json["src"])
+
+        if self.DEBUG == 'true':
+            xbmc.log("[ADDON] %s v%s (%s) debug mode, %s = %s" % (
+            ADDON, VERSION, DATE, "video_url", str(video_url)), xbmc.LOGNOTICE)
+
         no_url_found = False
         unplayable_media_file = False
         have_valid_url = False

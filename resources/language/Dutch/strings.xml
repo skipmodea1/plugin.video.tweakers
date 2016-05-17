@@ -18,10 +18,12 @@
     <string id="30202">DVDPlayer</string>
     <string id="30203">MPlayer</string>
 
-    <string id="30300">Video kwaliteit</string>
-    <string id="30301">Standaard</string>
-    <string id="30302">High Definition (indien beschikbaar)</string>
-    
+    <string id="30300">Gewenste Video Kwaliteit</string>
+    <string id="30301">Erg Hoog</string>
+    <string id="30302">Hoog</string>
+    <string id="30303">Middel</string>
+    <string id="30304">Laag</string>
+
 	<string id="30400">Debug</string>
 	
 	<!--
