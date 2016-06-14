@@ -48,7 +48,7 @@ class Main:
             keyboard.doModal()
             if keyboard.isConfirmed():
                 self.search_string = keyboard.getText()
-                self.video_list_page_url = "http://tweakers.net/video/zoeken?keyword=%s&page=001" % (self.search_string)
+                self.video_list_page_url = "https://tweakers.net/video/zoeken?keyword=%s&page=001" % (self.search_string)
 
         xbmc.log("[ADDON] %s v%s (%s) debug mode, %s = %s" % (
                 ADDON, VERSION, DATE, "self.video_list_page_url", str(self.video_list_page_url)), xbmc.LOGDEBUG)
@@ -106,7 +106,7 @@ class Main:
 
         # Get the video page urls
         # <td class="video-image">
-        #	<a href="http://tweakers.net/video/7517/showcase-trailer-van-cryengine-3-van-gdc-2013.html" class="thumb video" title="Showcase-trailer van CryEngine 3 van GDC 2013">
+        #	<a href="https://tweakers.net/video/7517/showcase-trailer-van-cryengine-3-van-gdc-2013.html" class="thumb video" title="Showcase-trailer van CryEngine 3 van GDC 2013">
         #   <img src="http://ic.tweakimg.net/img/accountid=1/externalid=7517/size=124x70/image.jpg" width=124 height=70 alt=""><span class="playtime">04:00</span></a>
         # </td>
         video_page_url_in_tds = soup.findAll('td', attrs={'class': re.compile("video-image")})

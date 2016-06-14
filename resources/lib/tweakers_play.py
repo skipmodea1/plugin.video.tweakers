@@ -61,7 +61,7 @@ class Main:
         # Wait 1 second
         xbmc.sleep(1000)
 
-        # Video_page_url will be something like this: http://tweakers.net/video/7893/world-of-tanks-86-aankondiging.html
+        # Video_page_url will be something like this: https://tweakers.net/video/7893/world-of-tanks-86-aankondiging.html
         xbmc.log("[ADDON] %s v%s (%s) debug mode, %s = %s" % (
                 ADDON, VERSION, DATE, "self.video_page_url", str(self.video_page_url)), xbmc.LOGDEBUG)
 

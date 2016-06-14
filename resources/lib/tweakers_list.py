@@ -38,7 +38,7 @@ class Main:
         # Parse parameters
         if len(sys.argv[2]) == 0:
             self.plugin_category = LANGUAGE(30000)
-            self.video_list_page_url = "http://tweakers.net/video/zoeken/?page=001"
+            self.video_list_page_url = "https://tweakers.net/video/zoeken/?page=001"
             self.video_list_page_url = str(self.video_list_page_url)
             self.next_page_possible = "True"
         else:
@@ -103,7 +103,7 @@ class Main:
 
         # Get the video page urls
         # <td class="video-image">
-        #	<a href="http://tweakers.net/video/7517/showcase-trailer-van-cryengine-3-van-gdc-2013.html" class="thumb video" title="Showcase-trailer van CryEngine 3 van GDC 2013">
+        #	<a href="https://tweakers.net/video/7517/showcase-trailer-van-cryengine-3-van-gdc-2013.html" class="thumb video" title="Showcase-trailer van CryEngine 3 van GDC 2013">
         #   <img src="http://ic.tweakimg.net/img/accountid=1/externalid=7517/size=124x70/image.jpg" width=124 height=70 alt=""><span class="playtime">04:00</span></a>
         # </td>
         video_page_url_in_tds = soup.findAll('td', attrs={'class': re.compile("video-image")})
