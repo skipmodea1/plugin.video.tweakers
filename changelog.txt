@@ -1,4 +1,6 @@
-v1.1.4-SNAPSHOT (2016-06-05):
+v1.1.4-SNAPSHOT (2016-07-09):
+- using requests
+- suppress ssl errors
 - changed to https
 - changed addon debugging info to kodi debugging info
 

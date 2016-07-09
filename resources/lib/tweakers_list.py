@@ -6,6 +6,7 @@
 #
 import os
 import re
+import requests
 import sys
 import urllib
 import urlparse
@@ -15,7 +16,6 @@ import xbmcplugin
 from BeautifulSoup import BeautifulSoup
 
 from tweakers_const import ADDON, SETTINGS, LANGUAGE, IMAGES_PATH, DATE, VERSION
-from tweakers_utils import HTTPCommunicator
 
 
 #
@@ -38,7 +38,7 @@ class Main:
         # Parse parameters
         if len(sys.argv[2]) == 0:
             self.plugin_category = LANGUAGE(30000)
-            self.video_list_page_url = "https://tweakers.net/video/zoeken/?page=001"
+            self.video_list_page_url = "http://tweakers.net/video/zoeken/?page=001"
             self.video_list_page_url = str(self.video_list_page_url)
             self.next_page_possible = "True"
         else:
@@ -89,7 +89,20 @@ class Main:
         #
         # Get HTML page
         #
-        html_source = HTTPCommunicator().get(self.video_list_page_url)
+        # Make the headers
+        xbmc_version = xbmc.getInfoLabel("System.BuildVersion")
+        user_agent = "Kodi Mediaplayer %s / Tweakers Addon %s" % (xbmc_version, VERSION)
+        headers = {"User-Agent": user_agent,
+                   "Accept-Encoding": "gzip",
+                   "X-Cookies-Accepted": "1"}
+        # Disable ssl logging (this is needed for python version < 2.7.9 (SNIMissingWarning))
+        import logging
+        logging.captureWarnings(True)
+        # Get HTML page
+        response = requests.get(self.video_list_page_url, headers=headers)
+        # response.status
+        html_source = response.text
+        html_source = html_source.encode('utf-8', 'ignore')
 
         # Parse response
         soup = BeautifulSoup(html_source)

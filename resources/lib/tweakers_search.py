@@ -7,6 +7,7 @@
 import os
 import re
 import sys
+import requests
 import urllib
 import urlparse
 import xbmc
@@ -15,7 +16,6 @@ import xbmcplugin
 from BeautifulSoup import BeautifulSoup
 
 from tweakers_const import ADDON, SETTINGS, LANGUAGE, IMAGES_PATH, DATE, VERSION
-from tweakers_utils import HTTPCommunicator
 
 
 #
@@ -55,7 +55,7 @@ class Main:
 
         if self.next_page_possible == "True":
             # Determine current item number, next item number, next_url
-            # f.e. http://www.tweakers.net/category/videos/page/001/
+            # f.e. https://www.tweakers.net/category/videos/page/001/
             pos_of_page = self.video_list_page_url.rfind('&page=')
             if pos_of_page >= 0:
                 page_number_str = str(
@@ -92,14 +92,26 @@ class Main:
         #
         # Get HTML page
         #
-        html_source = HTTPCommunicator().get(self.video_list_page_url)
+        # Make the headers
+        xbmc_version = xbmc.getInfoLabel("System.BuildVersion")
+        user_agent = "Kodi Mediaplayer %s / Tweakers Addon %s" % (xbmc_version, VERSION)
+        headers = {"User-Agent": user_agent,
+                   "Accept-Encoding": "gzip",
+                   "X-Cookies-Accepted": "1"}
+        # Disable ssl logging (this is needed for python version < 2.7.9 (SNIMissingWarning))
+        import logging
+        logging.captureWarnings(True)
+        # Get HTML page
+        response = requests.get(self.video_list_page_url, headers=headers)
+        html_source = response.text
+        html_source = html_source.encode('utf-8', 'ignore')
 
         # Parse response
         soup = BeautifulSoup(html_source)
 
         # Get the thumbnail urls
-        # <img src="http://ic.tweakimg.net/img/accountid=1/externalid=7515/size=124x70/image.jpg" width=124 height=70 alt="">
-        thumbnail_urls = soup.findAll('img', attrs={'src': re.compile("^http://ic.tweakimg.net/")})
+        # <img src="https://ic.tweakimg.net/img/accountid=1/externalid=7515/size=124x70/image.jpg" width=124 height=70 alt="">
+        thumbnail_urls = soup.findAll('img', attrs={'src': re.compile("^https://ic.tweakimg.net/")})
 
         xbmc.log("[ADDON] %s v%s (%s) debug mode, %s = %s" % (
                 ADDON, VERSION, DATE, "len(thumbnail_urls)", str(len(thumbnail_urls))), xbmc.LOGDEBUG)
@@ -107,7 +119,7 @@ class Main:
         # Get the video page urls
         # <td class="video-image">
         #	<a href="https://tweakers.net/video/7517/showcase-trailer-van-cryengine-3-van-gdc-2013.html" class="thumb video" title="Showcase-trailer van CryEngine 3 van GDC 2013">
-        #   <img src="http://ic.tweakimg.net/img/accountid=1/externalid=7517/size=124x70/image.jpg" width=124 height=70 alt=""><span class="playtime">04:00</span></a>
+        #   <img src="https://ic.tweakimg.net/img/accountid=1/externalid=7517/size=124x70/image.jpg" width=124 height=70 alt=""><span class="playtime">04:00</span></a>
         # </td>
         video_page_url_in_tds = soup.findAll('td', attrs={'class': re.compile("video-image")})
         xbmc.log("[ADDON] %s v%s (%s) debug mode, %s = %s" % (

@@ -5,6 +5,7 @@
 # Imports
 #
 import sys
+import requests
 import urllib2
 import urlparse
 import re
@@ -15,7 +16,7 @@ import xbmcplugin
 from BeautifulSoup import BeautifulSoup
 
 from tweakers_const import ADDON, SETTINGS, LANGUAGE, DATE, VERSION
-from tweakers_utils import HTTPCommunicator
+
 
 
 #
@@ -65,9 +66,22 @@ class Main:
         xbmc.log("[ADDON] %s v%s (%s) debug mode, %s = %s" % (
                 ADDON, VERSION, DATE, "self.video_page_url", str(self.video_page_url)), xbmc.LOGDEBUG)
 
+
+        # Make the headers
+        xbmc_version = xbmc.getInfoLabel("System.BuildVersion")
+        user_agent = "Kodi Mediaplayer %s / Tweakers Addon %s" % (xbmc_version, VERSION)
+        headers = {"User-Agent": user_agent,
+                   "Accept-Encoding": "gzip",
+                   "X-Cookies-Accepted": "1"}
+        # Disable ssl logging (this is needed for python version < 2.7.9 (SNIMissingWarning))
+        import logging
+        logging.captureWarnings(True)
+
         html_source = ''
         try:
-            html_source = HTTPCommunicator().get(self.video_page_url)
+            response = requests.get(self.video_page_url, headers=headers)
+            html_source = response.text
+            html_source = html_source.encode('utf-8', 'ignore')
         except urllib2.HTTPError, error:
             xbmc.log("[ADDON] %s v%s (%s) debug mode, %s = %s" % (ADDON, VERSION, DATE, "HTTPError", str(error)),
                          xbmc.LOGDEBUG)
@@ -91,7 +105,9 @@ class Main:
 
         html_source = ''
         try:
-            html_source = HTTPCommunicator().get(real_video_page_url)
+            response = requests.get(real_video_page_url, headers=headers)
+            html_source = response.text
+            html_source = html_source.encode('utf-8', 'ignore')
         except urllib2.HTTPError, error:
             xbmc.log(
                     "[ADDON] %s v%s (%s) debug mode, %s = %s" % (ADDON, VERSION, DATE, "HTTPError", str(error)),
@@ -177,15 +193,12 @@ class Main:
             ADDON, VERSION, DATE, "video_url", str(video_url)), xbmc.LOGDEBUG)
 
         no_url_found = False
-        unplayable_media_file = False
         have_valid_url = False
+
         if len(video_url) == 0:
             no_url_found = True
         else:
-            if HTTPCommunicator().exists(video_url):
-                have_valid_url = True
-            else:
-                unplayable_media_file = True
+            have_valid_url = True
 
         # Play video
         if have_valid_url:
@@ -196,5 +209,3 @@ class Main:
         #
         elif no_url_found:
             xbmcgui.Dialog().ok(LANGUAGE(30000), LANGUAGE(30505))
-        elif unplayable_media_file:
-            xbmcgui.Dialog().ok(LANGUAGE(30000), LANGUAGE(30506))
