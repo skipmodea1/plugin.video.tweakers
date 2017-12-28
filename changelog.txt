@@ -1,4 +1,4 @@
-v1.1.9-SNAPSHOT (2017-12-03)
+v1.1.9 (2017-12-28)
 - removed looking for video dialogue
 - fix to match the correct thumbnail with the item
 - addon now works in kode python 2 and also 3 (!!) thanks to the future project
