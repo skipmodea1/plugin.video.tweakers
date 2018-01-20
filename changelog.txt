@@ -1,3 +1,5 @@
+v1.1.10-SNAPSHOT (2018-01-20)
+
 v1.1.9 (2018-01-12)
 - removed looking for video dialogue
 - fix to match the correct thumbnail with the item

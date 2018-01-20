@@ -11,7 +11,6 @@ from builtins import object
 import sys
 import requests
 import urllib.request, urllib.error, urllib.parse
-import urllib.parse
 import re
 import json
 import xbmc

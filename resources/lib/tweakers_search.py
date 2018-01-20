@@ -13,7 +13,6 @@ import re
 import sys
 import requests
 import urllib.request, urllib.parse, urllib.error
-import urllib.parse
 import xbmc
 import xbmcgui
 import xbmcplugin
