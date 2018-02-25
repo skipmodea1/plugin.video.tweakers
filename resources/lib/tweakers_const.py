@@ -18,7 +18,7 @@ ADDON = "plugin.video.tweakers"
 SETTINGS = xbmcaddon.Addon()
 LANGUAGE = SETTINGS.getLocalizedString
 IMAGES_PATH = os.path.join(xbmcaddon.Addon().getAddonInfo('path'), 'resources', 'images')
-DATE = "2018-01-20"
+DATE = "2018-02-24"
 VERSION = "1.1.10-SNAPSHOT"
 
 if sys.version_info[0] > 2:

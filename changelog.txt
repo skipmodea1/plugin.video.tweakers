@@ -1,4 +1,6 @@
-v1.1.10-SNAPSHOT (2018-01-20)
+v1.1.10-SNAPSHOT (2018-02-24)
+- removing non-ascii characters in title in parameters to prevent UnicodeDecodeError: 'ascii' codec can't decode ...
+The error occured when doing urllib.parse.parse_qs of the parameters
 
 v1.1.9 (2018-01-12)
 - removed looking for video dialogue
