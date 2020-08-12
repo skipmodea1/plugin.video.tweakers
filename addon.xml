@@ -22,7 +22,7 @@
 	<description lang="nl">Bekijk technologie videos van Tweakers.net (dutch)</description>
 	<disclaimer lang="nl">Bugs of andere feedback op deze plugin kan geplaatst worden in de Tweakers.net thread op het Kodi forum.</disclaimer>
     <language>nl</language>
-    <license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
+    <license>GPL-2.0-or-later</license>
     <forum>https://forum.kodi.tv/showthread.php?tid=167812</forum>
     <website>https://www.tweakers.net</website>
     <source>https://github.com/skipmodea1/plugin.video.tweakers</source>
